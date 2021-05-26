@@ -74,7 +74,13 @@ sys.stdout = Unbuffered(sys.stdout)
 
 if __name__ == "__main__":
     import argparse
-    print('''
-Usage:
-    download: downloads a Wikipedia multistream dump file
-    ''')
+    parser = argparse.ArgumentParser(description='Iterate over the contents of a Wikipedia dump file.')
+    parser.add_argument('dumpfile', nargs='?')
+    args = parser.parse_args()
+
+    if args.dumpfile:
+        print(args.dumpfile)
+    else:
+        import os
+        dumpfiles = [fname for fname in os.listdir('.') if any(s in fname for s in ('.sql', '.xml'))]
+        print("possible dumpfiles:", dumpfiles)
