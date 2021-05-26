@@ -76,9 +76,11 @@ def download_sql_dump(language='en', file='pages-articles-multistream', dump="la
 def download_wikipedia_file(url, fname=None):
     if not fname:
         fname = url.split('/')[-1]
+    if url[0] != '/':
+        url = '/'+url
     print('requesting', url, 'and saving to', fname)
     r = requests.get(BASE_URL + url, stream=True)
-    print(url, r, r.text)
+    print("streaming request:", r)
     total_size = int(r.headers["Content-Length"])
     print('downloading', total_size, 'bytes to', fname)
     with tqdm.wrapattr(open(fname, 'wb'), 'write', miniters=1, 
@@ -108,9 +110,7 @@ Possible commands:
         for item in results:
             print(f'{item["url"]:100} {round(int(item["size"])/1_000_000):8} MB')
     if args.command[0] == 'download':
-        url = 'google.com'
-        fname = 'test.sql'
-        download_wikipedia_file(url, fname)
+        download_wikipedia_file(*args.params)
     if args.command[0] == 'help':
         print(helptext)
     if args.command[0] == 'latest':
